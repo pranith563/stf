@@ -193,6 +193,8 @@ message DeviceField {
   optional DeviceProviderField provider = 13;
   optional DeviceGroupField group = 14;
   optional string marketName = 15;
+  optional string socModel = 16;
+  optional string socManufacturer = 17;
 }
 
 message DeviceChangeMessage {
@@ -428,6 +430,8 @@ message DeviceIdentityMessage {
   optional string cpuPlatform = 13;
   optional string openGLESVersion = 14;
   optional string marketName = 15;
+  optional string socModel = 16;
+  optional string socManufacturer = 17;
 }
 
 message DeviceProperty {
