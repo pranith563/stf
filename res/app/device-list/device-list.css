@@ -87,3 +87,21 @@ img.device-icon-smallest {
 .stf-device-list .device-note:hover .device-note-edit {
   visibility: visible;
 }
+
+.stf-device-list .device-list-copyable {
+  white-space: nowrap;
+}
+
+.stf-device-list .device-list-copyable-value {
+  font-family: monospace;
+}
+
+.stf-device-list .device-list-copy-button {
+  margin-left: 6px;
+  padding: 0 3px;
+  visibility: hidden;
+}
+
+.stf-device-list .device-list-copyable:hover .device-list-copy-button {
+  visibility: visible;
+}

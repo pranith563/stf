@@ -33,7 +33,7 @@ module.exports = function DeviceListCtrl(
     }
   , {
       name: 'serial'
-    , selected: false
+    , selected: true
     }
   , {
       name: 'operator'
@@ -166,6 +166,12 @@ module.exports = function DeviceListCtrl(
   SettingsService.bind($scope, {
     target: 'columns'
   , source: 'deviceListColumns'
+  })
+
+  $scope.columns.forEach(function(column) {
+    if (column.name === 'serial') {
+      column.selected = true
+    }
   })
 
   var defaultSort = {

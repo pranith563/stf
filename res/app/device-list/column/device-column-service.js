@@ -22,7 +22,7 @@ var filterOps = {
   }
 }
 
-module.exports = function DeviceColumnService($filter, gettext, SettingsService, AppState) {
+module.exports = function DeviceColumnService($filter, gettext, SettingsService, AppState, $window) {
   // Definitions for all possible values.
   return {
     state: DeviceStatusCell({
@@ -217,10 +217,20 @@ module.exports = function DeviceColumnService($filter, gettext, SettingsService,
         return device.browser || {apps: []}
       }
     })
-  , serial: TextCell({
+  , serial: CopyableTextCell({
       title: gettext('Serial')
+    , copyTitle: gettext('Copy serial')
     , value: function(device) {
         return device.serial || ''
+      }
+    , copy: function(value) {
+        var input = $window.document.createElement('input')
+
+        $window.document.body.appendChild(input)
+        input.value = value
+        input.select()
+        $window.document.execCommand('copy')
+        $window.document.body.removeChild(input)
       }
     })
   , manufacturer: TextCell({
@@ -403,6 +413,57 @@ function TextCell(options) {
   , update: function(td, item) {
       var t = td.firstChild
       t.nodeValue = options.value(item)
+      return td
+    }
+  , compare: function(a, b) {
+      return compareIgnoreCase(options.value(a), options.value(b))
+    }
+  , filter: function(item, filter) {
+      return filterIgnoreCase(options.value(item), filter.query)
+    }
+  })
+}
+
+function CopyableTextCell(options) {
+  return _.defaults(options, {
+    title: options.title
+  , defaultOrder: 'asc'
+  , build: function() {
+      var td = document.createElement('td')
+      var span = document.createElement('span')
+      var button = document.createElement('button')
+      var icon = document.createElement('i')
+
+      td.className = 'device-list-copyable'
+      span.className = 'device-list-copyable-value'
+      span.appendChild(document.createTextNode(''))
+
+      button.className = 'btn btn-xs btn-link device-list-copy-button'
+      button.type = 'button'
+      button.title = options.copyTitle
+      icon.className = 'fa fa-copy'
+
+      button.appendChild(icon)
+      td.appendChild(span)
+      td.appendChild(button)
+
+      return td
+    }
+  , update: function(td, item) {
+      var span = td.firstChild
+      var button = span.nextSibling
+      var t = span.firstChild
+      var value = options.value(item)
+
+      t.nodeValue = value
+      button.onclick = function(event) {
+        event.preventDefault()
+        event.stopPropagation()
+        if (value) {
+          options.copy(value)
+        }
+      }
+
       return td
     }
   , compare: function(a, b) {
